@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FBDownloader - Premium Video Saver</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
+        .dark .glass { background: rgba(15, 23, 42, 0.8); }
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading { to { background-position: -200% 0; } }
+        .result-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+
+    <header class="sticky top-0 z-50 glass border-b border-slate-200 dark:border-slate-800">
+        <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-lg">
+                    <i class="fa-solid fa-cloud-arrow-down text-xl"></i>
+                </div>
+                <span class="font-bold text-xl tracking-tight">FB<span class="text-indigo-600">Down</span></span>
+            </div>
+            <div class="hidden md:flex gap-6 font-medium text-sm">
+                <a href="#" class="hover:text-indigo-600">Home</a>
+                <a href="#faq" class="hover:text-indigo-600">FAQ</a>
+                <a href="#privacy" class="hover:text-indigo-600">Privacy</a>
+            </div>
+            <button id="themeToggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800">
+                <i class="fa-solid fa-moon dark:hidden"></i>
+                <i class="fa-solid fa-sun hidden dark:block"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-12">
+        <section class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
+                Download Facebook Video Cepat & Mudah
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-lg">Tanpa login, kualitas tinggi, 100% gratis.</p>
+        </section>
+
+        <div class="bg-white dark:bg-slate-900 p-2 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 mb-8">
+            <div class="relative flex flex-col md:flex-row gap-2">
+                <div class="relative flex-grow">
+                    <i class="fa-solid fa-link absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="urlInput" 
+                        placeholder="Tempel link video Facebook di sini..." 
+                        class="w-full pl-12 pr-24 py-4 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 bg-transparent outline-none text-lg">
+                    <button id="pasteBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold uppercase text-indigo-600 hover:text-indigo-700">
+                        Paste
+                    </button>
+                </div>
+                <button id="getBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none">
+                    <span>Get Video</span>
+                </button>
+            </div>
+            <p id="urlHelper" class="px-4 py-2 text-xs text-slate-400 hidden italic"></p>
+        </div>
+
+        <div id="historyContainer" class="flex flex-wrap gap-2 mb-12 opacity-0 transition-opacity">
+            <span class="text-xs text-slate-400 self-center mr-2">Baru saja:</span>
+            </div>
+
+        <section id="resultArea" class="hidden space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div id="skeleton" class="hidden">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row">
+                    <div class="w-full md:w-64 h-48 shimmer"></div>
+                    <div class="p-6 flex-grow space-y-4">
+                        <div class="h-6 w-3/4 shimmer rounded"></div>
+                        <div class="h-4 w-1/4 shimmer rounded"></div>
+                        <div class="flex gap-2">
+                            <div class="h-10 w-24 shimmer rounded-lg"></div>
+                            <div class="h-10 w-24 shimmer rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="videoCard" class="hidden bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+                <div class="flex flex-col md:flex-row">
+                    <div class="relative w-full md:w-72">
+                        <img id="vidThumb" src="" alt="Thumbnail" class="w-full h-full object-cover aspect-video">
+                        <span id="vidDuration" class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"></span>
+                    </div>
+                    <div class="p-6 flex-grow">
+                        <h3 id="vidTitle" class="text-xl font-bold mb-2 line-clamp-2 leading-tight"></h3>
+                        <div class="flex flex-wrap gap-3 mt-6" id="downloadButtons">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="mt-24">
+            <h2 class="text-3xl font-bold text-center mb-10">Pertanyaan Umum</h2>
+            <div class="space-y-4" id="faqAccordion">
+                </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-12 mt-12 bg-white dark:bg-slate-900">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <p class="text-slate-500 text-sm mb-4">
+                Disclaimer: Kami tidak berafiliasi dengan Facebook. Gunakan layanan ini hanya untuk video publik & hargai hak cipta.
+            </p>
+            <div class="flex justify-center gap-6 text-sm text-slate-400">
+                <a href="#privacy" class="hover:text-indigo-600">Privacy Policy</a>
+                <a href="mailto:support@example.com" class="hover:text-indigo-600">Report Broken Link</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="fixed bottom-6 right-6 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+            <i id="toastIcon" class="fa-solid fa-circle-check text-green-400"></i>
+            <span id="toastMsg"></span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
